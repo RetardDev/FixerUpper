@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% load cart %}
+{% load custom_filter %}
+
+
+  <!-- Start Content Page -->
+  <div class="container-fluid bg-light py-5">
+    <div class="col-md-6 m-auto text-center">
+        <h1 class="h1">Contact Us</h1>
+        <p>
+            Proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            Lorem ipsum dolor sit amet.
+        </p>
+    </div>
+</div>
+
+<!-- Start Map -->
+
+<script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
+<div id='map' style='width: 100%; height: 300px;'></div>
+
+<script>
+
+//please do not violate my api key 
+
+mapboxgl.accessToken = 'pk.eyJ1IjoiYXJ5cHRpc2UiLCJhIjoiY2xxcjNyd2piMmJ3cTJqcDk5bHdlNG1rYSJ9.aYuWhexCL-M5UsmDT1sbKQ';
+const map = new mapboxgl.Map({
+	container: 'map', // container ID
+	style: 'mapbox://styles/mapbox/streets-v12', // style URL
+	center: [-74.5, 40], // starting position [lng, lat]
+	zoom: 9, // starting zoom
+});
+</script>
+
+<!-- <div id="mapid" style="width: 100%; height: 300px;"></div>
+
+
+
+<script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
+    ({key: "AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg", v: "weekly"});</script>
+Ena Map -->
+
+<!-- Start Contact -->
+<div class="container py-5">
+    <div class="row py-5">
+        <form class="col-md-9 m-auto" method="post" role="form">
+            <div class="row">
+                <div class="form-group col-md-6 mb-3">
+                    <label for="inputname">Name</label>
+                    <input type="text" class="form-control mt-1" id="name" name="name" placeholder="Name">
+                </div>
+                <div class="form-group col-md-6 mb-3">
+                    <label for="inputemail">Email</label>
+                    <input type="email" class="form-control mt-1" id="email" name="email" placeholder="Email">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="inputsubject">Subject</label>
+                <input type="text" class="form-control mt-1" id="subject" name="subject" placeholder="Subject">
+            </div>
+            <div class="mb-3">
+                <label for="inputmessage">Message</label>
+                <textarea class="form-control mt-1" id="message" name="message" placeholder="Message" rows="8"></textarea>
+            </div>
+            <div class="row">
+                <div class="col text-end mt-2">
+                    <button type="submit" class="btn btn-success btn-lg px-3">Let’s Talk</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- End Contact -->
+
+
+
+
+
+
+
+
+{% endblock %}

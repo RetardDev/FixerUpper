@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+{% load cart %}
+{% load custom_filter %}
+
+
+
+{% if error_message %}
+<main>
+  <br>
+
+  <!-- =======================
+  Main START -->
+  <section>
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center">
+          <!-- Image -->
+          <img src="{%static 'assets/img/empty-cart.svg' %}" class="h-200 h-md-300 mb-3" alt="">
+          <!-- Subtitle -->
+          <h2>Your cart is currently empty</h2>
+          <!-- info -->
+          <p class="mb-0">I think the below button is important. Hit this button and you will find a lot of interesting products on our "Shop" page</p>
+          <!-- Button -->
+          <a href="/service" class="btn btn-success mt-4 mb-0">Back to Shop</a>
+          <br>
+          <br>
+          <br>
+          <br>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- =======================
+  Main END -->
+  
+  </main>
+{%endif %} 
+
+{% if services %}
+<section class="h-100 gradient-custom">
+  <div class="container py-5">
+    <div class="row d-flex justify-content-center my-4">
+      <div class="col-md-8">
+        <div class="card mb-4">
+          <div class="card-header py-3">
+            <h5 class="mb-0">Cart - {{request.session.cart.keys|length}} items</h5>
+          </div>
+          <div class="card-body">
+            <!-- Single item -->
+
+            {% for service in services %}
+            <div class="row">
+              <div class="col-lg-3 col-md-12 mb-4 mb-lg-0">
+                <!-- Image -->
+                <div class="bg-image hover-overlay hover-zoom ripple rounded" data-mdb-ripple-color="light">
+                  <img src="{{service.image.url}}"
+                    class="w-100" alt="Blue Jeans Jacket" />
+                  <a href="#!">
+                    <div class="mask" style="background-color: rgba(251, 251, 251, 0.2)"></div>
+                  </a>
+                </div>
+                <!-- Image -->
+              </div>
+
+              <div class="col-lg-5 col-md-6 mb-4 mb-lg-0">
+                
+                <p><strong>{{service.name}}</strong></p>
+                <p>Description: {{service.description}}</p>
+                <!-- <p>Size: M</p> -->
+                <button type="button" class="btn btn-primary btn-sm me-1 mb-2" data-mdb-toggle="tooltip"
+                  title="Remove item">
+                  <i class="fas fa-trash"></i>
+                </button>
+                <button type="button" class="btn btn-danger btn-sm mb-2" data-mdb-toggle="tooltip"
+                  title="Move to the wish list">
+                  <i class="fas fa-heart"></i>
+                </button>
+                <!-- Data -->
+              </div>
+
+              <div class="col-lg-4 col-md-6 mb-4 mb-lg-0">
+                <!-- Quantity -->
+                <div class="d-flex mb-4" style="max-width: 300px">
+                  <form action="/service/{{ service.id }}" method="post">
+                    {% csrf_token %}
+								<input hidden type="text" name='service' value='{{service.id}}'>
+                  <!-- <button class="btn btn-primary px-3 me-2"
+                    onclick="this> -->
+                    <input hidden type="text" name='remove' value='True'>
+                   <input type="submit" value=" - " class="btn btn-block btn-success border-right">
+                  
+                </form>
+
+                  <div class="form-outline">
+                    <input id="form1" min="0" name="quantity" value="{{service|cart_quantity:request.session.cart}}" type="number" class="form-control" />
+                    <label class="form-label" for="form1">Quantity</label>
+                  </div>
+
+                  <form action="/service/{{ service.id }}" method="post">
+                    {% csrf_token %}
+								<input hidden type="text" name='service' value='{{service.id}}'>
+								<input type="submit" value=" + " class="btn btn-block btn-success border-left">
+                </form>
+                </div>
+                <!-- Quantity -->
+
+                <!-- Price -->
+                <p class="text-start text-md-center">
+                  <strong>{{service|price_total:request.session.cart|currency}}</strong>
+                </p>
+                <!-- Price -->
+              </div>
+            </div>
+            <!-- Single item -->
+            {% endfor %}
+            <hr class="my-4" />
+
+          </div>
+        </div>
+        <div class="card mb-4">
+          <div class="card-body">
+            <p><strong>Expected shipping delivery</strong></p>
+            <p class="mb-0">{{ tomorrow }} - {{ day_after_tomorrow}} </p>
+          </div>
+        </div>
+        <div class="card mb-4 mb-lg-0">
+          <div class="card-body">
+            <p><strong>We accept</strong></p>
+            <img class="me-2" width="45px"
+              src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/visa.svg"
+              alt="Visa" />
+            <img class="me-2" width="45px"
+              src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/amex.svg"
+              alt="American Express" />
+            <img class="me-2" width="45px"
+              src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce-gateway-stripe/assets/images/mastercard.svg"
+              alt="Mastercard" />
+            <img class="me-2" width="45px"
+              src="https://mdbcdn.b-cdn.net/wp-content/plugins/woocommerce/includes/gateways/paypal/assets/images/paypal.webp"
+              alt="PayPal acceptance mark" />
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card mb-4">
+          <div class="card-header py-3">
+            <h5 class="mb-0">Summary</h5>
+          </div>
+          <div class="card-body">
+            <ul class="list-group list-group-flush">
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+                Services
+                <span>{{services|total_cart_price:request.session.cart|currency}}</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                Shipping
+                <span>Free</span>
+              </li>
+              <li
+                class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+                <div>
+                  <strong>Total amount</strong>
+                  <strong>
+                    <p class="mb-0">(including VAT)</p>
+                  </strong>
+                </div>
+                <span><strong>{{services|total_cart_price:request.session.cart|currency}}</strong></span>
+              </li>
+            </ul>
+
+            <button type="button"  data-toggle="modal" data-target="#exampleModal"  class="btn btn-success btn-lg btn-block">
+              Go to checkout
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+            Check Out Form
+        </h5>
+        <hr>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="m-2 p-3">
+          <form action="/check-out" method="POST">
+              {% csrf_token %}
+              <div class="form-group">
+                <label for="">Address</label>
+                <input type="text" name="address" id="" class="form-control" placeholder="" aria-describedby="helpId">
+                
+              </div>
+              <div class="form-group">
+                  <label for="">Phone</label>
+                  <input type="text" name="phone" id="" class="form-control" placeholder="" aria-describedby="helpId">
+                </div>
+
+                <input type="submit" class="btn float-right btn-outline-success col-lg-6" value="Check out">
+          </form>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+crossorigin="anonymous"></script>
+{% endif %}
+{% endblock %}
